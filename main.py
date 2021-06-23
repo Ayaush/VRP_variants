@@ -7,15 +7,19 @@ from PDVRP_ort import main as pdvrp_solver
 from PDVRPTW_ort import main as pdptw_solver
 from visualization import inputvisualize
 from visualization import outputvisualize
+from PDVRPwithFTW import main as pdpftw_solver
+import  sys
 """possible option
     1. TSP
     2. VRP (minimum longest route)
     3. CVRP
     4. PDVRP
     5. VRPTW
-    6. PDVRPTW         """
-solver=6
-instance="LC1_4_1"
+    6. PDVRPTW        
+    7. PDVRPwithFTW
+     """
+solver=7
+instance="lc101"
 def run_VRP_variant(case,data):
     if case ==1:
         return call_TSP(data)
@@ -29,7 +33,8 @@ def run_VRP_variant(case,data):
         return call_VRPTW(data)
     elif case ==6:
         return call_PDVRPTW(data)
-
+    elif case ==7:
+        return  call_PDVRPwithFTW(data)
 
 def call_TSP(fulldata):
     keys = ['distance_matrix', 'num_vehicles', 'depot']
@@ -47,7 +52,7 @@ def call_CVRP(fulldata):
 def call_VRP(fulldata):
     keys = ['distance_matrix', 'num_vehicles', 'depot']
     data = {x: fulldata[x] for x in keys}
-    data["num_vehicles"] = 25
+    #data["num_vehicles"] = 25
     return vrp_solver(data)
 
 def call_VRPTW(fulldata):
@@ -59,7 +64,7 @@ def call_PDVRP(fulldata):
     keys = ['distance_matrix','pickups_deliveries', 'num_vehicles', 'depot']
     data = {x: fulldata[x] for x in keys}
     print(data['pickups_deliveries'])
-    data['num_vehicles']=10
+    data['num_vehicles']=25
     return pdvrp_solver(data)
 
 def call_PDVRPTW(fulldata):
@@ -68,13 +73,18 @@ def call_PDVRPTW(fulldata):
     #data['num_vehicles'] = 25
     return pdptw_solver(data)
 
-
+def call_PDVRPwithFTW(fulldata):
+    keys = ['time_matrix', 'time_windows', 'pickups_deliveries', 'num_vehicles', 'depot']
+    data = {x: fulldata[x] for x in keys}
+    print(data["time_windows"])
+    #sys.exit()
+    return  pdpftw_solver(data)
 if __name__ =="__main__":
     data=get_instance(instance)
-    #inputvisualize(data)
+    inputvisualize(data)
 
     solution=run_VRP_variant(solver,data)
     print("here is the solution")
     print(solution)
-    #outputvisualize(data,solution)
+    outputvisualize(data,solution)
 
